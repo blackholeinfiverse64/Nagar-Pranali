@@ -11,7 +11,29 @@ const db = require("./database/db");
    MIDDLEWARE
 ========================= */
 
-app.use(cors());
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (!process.env.FRONTEND_URL) {
+        return callback(null, true);
+      }
+
+      const allowed =
+        origin === process.env.FRONTEND_URL ||
+        /^http:\/\/localhost:\d+$/.test(origin);
+
+      if (allowed) {
+        return callback(null, true);
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    }
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -26,6 +48,7 @@ app.use("/api/escalations", require("./routes/escalations"));
 app.use("/api/decisions", require("./routes/decisions"));
 app.use("/api/replay", require("./routes/replay"));
 app.use("/api/runtime", require("./routes/runtime"));
+app.use("/api/demo", require("./routes/demo"));
 
 /* =========================
    ROOT
