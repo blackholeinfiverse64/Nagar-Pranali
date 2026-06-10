@@ -30,6 +30,7 @@ app.use(
       const allowed =
         frontendUrls.includes(origin) ||
         /^https:\/\/[\w.-]+\.vercel\.app$/.test(origin) ||
+        /^https:\/\/[\w.-]+\.blackholeinfiverse\.app$/.test(origin) ||
         /^http:\/\/localhost:\d+$/.test(origin);
 
       if (allowed) {
