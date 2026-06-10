@@ -22,8 +22,14 @@ app.use(
         return callback(null, true);
       }
 
+      const frontendUrls = (process.env.FRONTEND_URL || "")
+        .split(",")
+        .map((url) => url.trim())
+        .filter(Boolean);
+
       const allowed =
-        origin === process.env.FRONTEND_URL ||
+        frontendUrls.includes(origin) ||
+        /^https:\/\/[\w.-]+\.vercel\.app$/.test(origin) ||
         /^http:\/\/localhost:\d+$/.test(origin);
 
       if (allowed) {
